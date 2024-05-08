@@ -87,10 +87,12 @@ def empty_program():
     return empty_object(KEYS_PROG)
 
 def get_organization(processNode:Element):
-    return get_one_to_one(processNode, 'Organizations', KEYS_ORG)
+    obj = get_one_to_one(processNode, './/Organization', KEYS_ORG)
+    return obj
 
 def get_commodity(processNode:Element):
-    return get_one_to_one(processNode, 'Commodities', KEYS_COMMODITIES)
+    obj = get_one_to_one(processNode, './/Commodity', KEYS_COMMODITIES)
+    return obj
 
 def get_items_arr(processNode:Element):
     def flattener(node:Element, obj):
@@ -122,7 +124,8 @@ def get_items_arr(processNode:Element):
         
         return arr 
 
-    return get_one_to_many(processNode,'Items/*/Item',KEYS_ITEM, additional_fn=flattener)
+    results = get_one_to_many(processNode,'.//Item',KEYS_ITEM, additional_fn=flattener)
+    return results
 
 def get_programs_arr(processNode:Element):
     return get_one_to_many(processNode, 'Program/Program', KEYS_PROG)

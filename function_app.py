@@ -19,7 +19,7 @@ def call_api(bpmstatus, pagenum, pagesize):
         )
     return res.text
 
-@app.route(route="values")
+@app.route(route="values", methods=['GET'], auth_level=func.AuthLevel.FUNCTION)
 def get_vals(req: func.HttpRequest) -> func.HttpResponse:
     
     pagenum = req.params.get('pagenum',1)
@@ -31,7 +31,7 @@ def get_vals(req: func.HttpRequest) -> func.HttpResponse:
             'output must be either "json" or "csv".',
             status_code=400
         )
-    write_headers = req.params.get('headers','false').lower()=='true'
+
     if bpmstatus is None:
         return func.HttpResponse(
             "Please pass a bpmstatus",
@@ -50,9 +50,14 @@ def get_vals(req: func.HttpRequest) -> func.HttpResponse:
             status_code=200
         )    
     if output=='csv':
+        write_headers = req.params.get('headers','false').lower()=='true'
+        delimiter = req.params.get('delimiter', ',')
+        if delimiter == 'tab':
+            delimiter = '\t'
+        
         from src.csv_parser import arr_to_csv
         return func.HttpResponse(
-            arr_to_csv(arr, write_headers),
+            arr_to_csv(arr, write_headers, delimiter=delimiter),
             status_code=200
         )
 
@@ -61,7 +66,7 @@ def get_rowcount(bpmstatus):
     et = text_to_xml(xml_text)
     return int(et.find('.//TotalPage').text)
 
-@app.route(route="mappings")
+@app.route(route="mappings", methods=['GET'], auth_level=func.AuthLevel.FUNCTION)
 def get_mappings(req: func.HttpRequest) -> func.HttpResponse:
     bpmstatus = req.params.get('bpmstatus')
     nsample = int(req.params.get('nsample','500'))
@@ -104,7 +109,7 @@ def get_mappings(req: func.HttpRequest) -> func.HttpResponse:
     )
 
 
-@app.route(route="nrows")
+@app.route(route="nrows", methods=['GET'], auth_level=func.AuthLevel.FUNCTION)
 def get_nrows(req: func.HttpRequest) -> func.HttpResponse:
     bpmstatus = req.params.get('bpmstatus')
     if bpmstatus is None:
@@ -118,7 +123,7 @@ def get_nrows(req: func.HttpRequest) -> func.HttpResponse:
         status_code=200
     )
 
-@app.route(route="help")
+@app.route(route="help", methods=['GET'], auth_level=func.AuthLevel.ANONYMOUS)
 def get_help(req: func.HttpRequest) -> func.HttpResponse:
     return func.HttpResponse(
 '''<html>
