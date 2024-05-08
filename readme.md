@@ -57,3 +57,10 @@ I can't think of any scenarios in which a consumer of this data would work with 
 - Use VS Code debugger to start the app or run `func host start`.
     > VS Code provides a true debugger, whereas `func host start` only runs the app. 
 
+### Quick Deploy
+```bash
+git clone https://github.com/pooyaalavian/sample-azurefn-xml.git
+cd sample-azurefn-xml
+git fetch & git pull
+func azure functionapp publish <APP_NAME> --build remote --python
+```
