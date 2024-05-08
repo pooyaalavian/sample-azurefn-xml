@@ -61,6 +61,7 @@ I can't think of any scenarios in which a consumer of this data would work with 
 ```bash
 git clone https://github.com/pooyaalavian/sample-azurefn-xml.git
 cd sample-azurefn-xml
-git fetch & git pull
+git fetch 
+git pull
 func azure functionapp publish <APP_NAME> --build remote --python
 ```
