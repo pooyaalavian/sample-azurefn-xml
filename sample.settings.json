@@ -1,0 +1,10 @@
+{
+    "IsEncrypted": false,
+    "Values": {
+      "AzureWebJobsStorage": "",
+      "FUNCTIONS_WORKER_RUNTIME": "python",
+      "AzureWebJobsFeatureFlags": "EnableWorkerIndexing",
+      "XML_SERVER_API_KEY": "your-key",
+      "XML_SERVER_URL": "https://your-server.com/your-endpoint"
+    }
+  }
