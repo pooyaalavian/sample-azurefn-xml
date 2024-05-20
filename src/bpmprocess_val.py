@@ -73,6 +73,9 @@ KEYS_ITEM_YEARLY_DETAILS = [
     'AIF',
     'Volume',
     'RFPItemID',
+    'BIDescription',
+    'BI',
+    'PiecePrice',
 ]
 
 def empty_item(*,yearly_prefix='Yearly_', incentive_prefix='Incentive_'):
@@ -87,11 +90,19 @@ def empty_program():
     return empty_object(KEYS_PROG)
 
 def get_organization(processNode:Element):
-    obj = get_one_to_one(processNode, './/Organization', KEYS_ORG)
+    try:
+        obj = get_one_to_one(processNode, './/Organization', KEYS_ORG)
+    except Exception as e:
+        print(e)
+        obj = empty_object(KEYS_ORG)
     return obj
 
 def get_commodity(processNode:Element):
-    obj = get_one_to_one(processNode, './/Commodity', KEYS_COMMODITIES)
+    try:
+        obj = get_one_to_one(processNode, './/Commodity', KEYS_COMMODITIES)
+    except Exception as e:
+        print(e)
+        obj = empty_object(KEYS_COMMODITIES)
     return obj
 
 def get_items_arr(processNode:Element):
@@ -131,12 +142,16 @@ def get_programs_arr(processNode:Element):
     return get_one_to_many(processNode, 'Program/Program', KEYS_PROG)
 
 def get_process(processNode:Element):
-    proc = get_one_to_one(processNode,'.',KEYS_MAIN)
-    org = get_organization(processNode)
-    com = get_commodity(processNode)
-    proc = merge_objects(proc, org, second_prefix='Organization_')
-    proc = merge_objects(proc, com, second_prefix='Commodity_')
-    results = [proc]
+    try:
+        proc = get_one_to_one(processNode,'.',KEYS_MAIN)
+        org = get_organization(processNode)
+        com = get_commodity(processNode)
+        proc = merge_objects(proc, org, second_prefix='Organization_')
+        proc = merge_objects(proc, com, second_prefix='Commodity_')
+        results = [proc]
+    except Exception as e:
+        print(e)
+        return []
     
     items = get_items_arr(processNode)
     if len(items)==0:
